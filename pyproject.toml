@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "mgate"
+version = "1.0.0"
+description = "MGP-1.0 memory quality gates: verifiable verdicts for AI memory stores"
+readme = "README.md"
+requires-python = ">=3.9"
+license = {text = "Apache-2.0"}
+authors = [{name = "chenhz01"}]
+keywords = ["ai-memory", "evaluation", "verification", "erasure", "conformance"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: Apache Software License",
+    "Operating System :: OS Independent",
+    "Topic :: Software Development :: Quality Assurance",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+dependencies = []
+
+[project.urls]
+Homepage = "https://github.com/chenhz01/memory-gate-suite"
+Specification = "https://github.com/chenhz01/memory-gate-suite/blob/main/PROTOCOL.md"
+
+[project.scripts]
+mgate = "mgate.runner:main"
+
+[tool.setuptools]
+packages = ["mgate", "mgate.gates", "mgate.submit"]

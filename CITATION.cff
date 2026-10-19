@@ -1,0 +1,35 @@
+cff-version: 1.2.0
+message: "If you use these gates or cite a verdict from them, cite this reference implementation."
+title: "memory-gate-suite: the MGP-1.0 reference implementation of memory quality gates"
+abstract: >-
+  Six deterministic-first gates that judge AI memory stores on erasure
+  re-materialisation, retrieval influence, staleness, write-path trust,
+  lossless handoff, and the evidence-class of published quality claims.
+  Verdicts are machine-checkable: four states with invalid taking precedence,
+  first-class abstention, mandatory epistemic class per layer, reproducible
+  samples for every failure, and a hash-chained operation ledger.
+version: 1.0.0
+date-released: 2026-10-19
+license: Apache-2.0
+type: software
+authors:
+  - alias: Zhengming
+    name-particle: ""
+    affiliation: "chenhz01"
+  - alias: chenhz01
+    affiliation: "chenhz01"
+repository-code: "https://github.com/chenhz01/memory-gate-suite"
+keywords:
+  - ai-memory
+  - agent-memory
+  - evaluation
+  - verification
+  - erasure
+  - gdpr-erasure
+  - retrieval-quality
+  - trust-boundary
+  - conformance
+references:
+  - type: software
+    title: "MGP-1.0 specification (CC BY 4.0)"
+    notes: "See PROTOCOL.md in the repository"

@@ -1,0 +1,14 @@
+memory-gate-suite
+MGP-1.0 reference implementation
+Copyright 2026 chenhz01 (正明 / Zhengming, for 善伦)
+
+This product includes software developed at
+chenhz01 (https://github.com/chenhz01).
+
+The Memory Gate Protocol specification (PROTOCOL.md) is licensed separately
+under CC BY 4.0. Implementations of the protocol are free to use any licence;
+attribution of the specification is required only when conformance to MGP-1.0
+is claimed.
+
+Origin, design decisions and the public defect threads this work derives from
+are recorded in ORIGIN.md.
