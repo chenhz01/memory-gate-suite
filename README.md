@@ -13,6 +13,24 @@ dependencies, Python ≥ 3.9, ~2.2k lines.
 
 ---
 
+## What this is not (read this before judging it)
+
+The agent-memory evaluation space is **crowded** — DolphinBench, STATE-Bench,
+MemEval, Veracium, governed-memory all predate or parallel this work, and
+MemEval's adapter architecture is close enough to ours that saying otherwise
+would be dishonest. See [RELATED-WORK.md](RELATED-WORK.md) for a line-by-line
+comparison.
+
+This repository is **not a benchmark**. Benchmarks rank memory systems —
+"which one is better". MGP-1.0 certifies a **specific build against specific
+falsifiable properties** — "did this build pass this line, and who signs it".
+
+The difference is not marketing. A benchmark outputs a score; a score cannot
+express *"the fixture was poisoned, this run counts for nothing"*. MGP's
+`invalid` state can. That is the whole bet, stated plainly.
+
+---
+
 ## The failure this was built for
 
 A store accepts a delete, returns 200, and the memory is still there on the
