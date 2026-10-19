@@ -25,7 +25,8 @@ from typing import Any, Dict, List, Optional, Sequence
 
 from .adapters import ReferenceStore
 from .gates import GATES, ORDER
-from .protocol import ABSTAIN, FAIL, INVALID, PASS, aggregate, load_report
+from .protocol import (ABSTAIN, FAIL, INVALID, PASS, aggregate,
+                       content_fingerprint, load_report)
 from .submit import aml
 
 SUITE_VERSION = "1.0.0"
@@ -145,6 +146,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     p_ver = sub.add_parser("verify", help="verify a sealed report file")
     p_ver.add_argument("path")
 
+    p_fp = sub.add_parser(
+        "fingerprint",
+        help="compare runs by content, ignoring clocks and record ids")
+    p_fp.add_argument("paths", nargs="+")
+
     args = ap.parse_args(argv)
 
     if args.cmd == "list":
@@ -179,6 +185,42 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 gate = item.get("gate", "?") if isinstance(item, dict) else "?"
                 print(f"INVALID  gate={gate}: {exc}")
         print(f"\n{len(targets) - bad}/{len(targets)} reports verified")
+        return 0 if bad == 0 else 1
+
+    if args.cmd == "fingerprint":
+        from collections import defaultdict
+        groups = defaultdict(list)
+        bad = 0
+        for path in args.paths:
+            try:
+                doc = json.loads(open(path, encoding="utf-8").read())
+            except Exception as exc:                 # noqa: BLE001
+                print(f"UNREADABLE {path}: {exc}")
+                return 2
+            items = (doc.get("reports") if isinstance(doc, dict)
+                     and "reports" in doc else [doc])
+            for item in items:
+                try:
+                    d = load_report(item)
+                except Exception as exc:             # noqa: BLE001
+                    print(f"INVALID   {path}: {exc}")
+                    bad += 1
+                    continue
+                groups[d["gate"]].append(
+                    (path, content_fingerprint(item), d["verdict"]))
+        for gate, rows in groups.items():
+            uniq = {r[1] for r in rows}
+            status = "IDENTICAL" if len(uniq) == 1 else "DIVERGED"
+            if len(uniq) != 1:
+                bad += 1
+            print(f"{gate:<12} {status:<10} verdict={rows[0][2]:<8} "
+                  f"runs={len(rows)} fp={sorted(uniq)[0][:19]}...")
+            if len(uniq) > 1:
+                for r in rows:
+                    print(f"    {r[0]}: {r[1][:19]}... ({r[2]})")
+        print(f"\n{sum(len(v) for v in groups.values())} report(s), "
+              f"{len(groups)} gate(s), "
+              f"{'all identical' if bad == 0 else 'divergence found'}")
         return 0 if bad == 0 else 1
 
     if args.cmd == "run":

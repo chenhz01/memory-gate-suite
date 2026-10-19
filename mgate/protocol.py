@@ -100,6 +100,37 @@ def derive_verdict(layers: Iterable[Any]) -> str:
     return PASS
 
 
+def content_fingerprint(report: Dict[str, Any]) -> str:
+    """Clock-independent, order-independent identity of a verdict.
+
+    ``digest`` covers the whole document including run_id and timestamps, so
+    two identical runs never share one.  That is correct for tamper detection
+    and useless for the only question a reader actually asks: *did this gate
+    reach the same conclusion twice?*  This is that second identity -- same
+    gates, same layer verdicts, same check outcomes, same claim statuses
+    produce the same string, on any machine, on any day.
+    """
+    layers = []
+    for l in report.get("layers", []):
+        checks = sorted(
+            ({"name": c.get("name"), "ok": bool(c.get("ok"))}
+             for c in l.get("checks", [])),
+            key=lambda x: str(x["name"]))
+        layers.append({"name": l.get("name"), "verdict": l.get("verdict"),
+                       "confidence": l.get("confidence"), "checks": checks})
+    body = {
+        "gate": report.get("gate"),
+        "gate_version": report.get("gate_version"),
+        "verdict": report.get("verdict"),
+        "layers": layers,
+        "claims": [{"status": c.get("status"), "layer": c.get("layer")}
+                   for c in report.get("claims", [])],
+    }
+    blob = json.dumps(body, sort_keys=True, ensure_ascii=True,
+                      separators=(",", ":"))
+    return "fp:" + hashlib.sha256(blob.encode("utf-8")).hexdigest()[:32]
+
+
 def _now() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
 

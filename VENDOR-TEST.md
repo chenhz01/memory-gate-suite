@@ -112,6 +112,48 @@ two apart.
    represents a shape of claim vendors make. It is not a quotation from mem0's
    documentation, and no endorsement is implied.
 
+## Reproducibility (measured, not asserted)
+
+Two consecutive runs, same machine, same hour, fresh store each time:
+
+```
+$ python -m mgate fingerprint /tmp/mem0-r1.json /tmp/mem0-r2.json
+erasure      IDENTICAL  verdict=fail     runs=2
+retrieval    IDENTICAL  verdict=pass     runs=2
+staleness    IDENTICAL  verdict=fail     runs=2
+poisoning    IDENTICAL  verdict=fail     runs=2
+handoff      IDENTICAL  verdict=pass     runs=2
+claims       IDENTICAL  verdict=abstain  runs=2
+
+12 report(s), 6 gate(s), all identical
+```
+
+`fingerprint` is the clock-independent identity: gate + layer verdicts +
+check outcomes + claim statuses. The seal `digest` covers timestamps and
+record ids, so it differs between runs by design; the fingerprint does not.
+Same conclusion twice is the minimum bar for calling a verdict evidence.
+
+## Minimal reproduction (30 lines, one claim)
+
+`repro/mem0_erasure_replay.py` isolates finding 1 with nothing but mem0 and a
+fixed-response LLM. Run it and read six lines:
+
+```
+$ python repro/mem0_erasure_replay.py
+[1] stored after add          : 1 record(s)
+[2] delete_all returned       : success
+[3] records in vector store   : 0
+[4] messages table rows       : 1 (1 still carry the canary)
+[5] next extraction prompt    : CONTAINS the erased text
+[6] records after that add    : 1 -> ['my access code is CANARY-7F3A9B']
+
+RESULT: REPRODUCED -- erased text re-materialised after a successful delete
+```
+
+Line [3] is what the API promises. Line [4] is what the database holds.
+Line [5] is what the model is handed next. Line [6] is why the promise is
+not the property.
+
 ## Reproduce
 
 ```bash
