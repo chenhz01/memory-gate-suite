@@ -112,6 +112,36 @@ two apart.
    represents a shape of claim vendors make. It is not a quotation from mem0's
    documentation, and no endorsement is implied.
 
+## Prior art in the vendor's own tracker (checked 2026-10-19)
+
+**None of the three findings is new to mem0.** All three already have active
+threads, and two of them are far more developed than this run:
+
+| Finding here | Existing thread | State at check time |
+|---|---|---|
+| 1 — session buffer replayed after `delete_all` | mem0ai/mem0 **#7452** | open, 17 comments, multiple fix forks; the hard part turned out to be scope matching, not the delete |
+| 2 — additive writes leave contradictory facts live | **#4956** (22 comments), **#5352** (54 comments, workaround), **#7535** (7) | heavily discussed; no accepted mechanism |
+| 3 — no write-path trust boundary | **#5331** (closed feature request), **#5463** (closed cookbook guide), **#7283** (29), **#7660** | guidance exists; the default behaviour is unchanged |
+
+This is worth stating before anyone reads the failure table, because the
+temptation with a gate suite is to present known problems as discoveries.
+
+What this run adds is therefore **not** discovery:
+
+1. **A verdict grammar.** The threads above describe pain; none of them
+   defines a verdict that a third party can re-run, with `invalid` for a
+   poisoned fixture, `abstain` for an untestable property, and a seal that
+   refuses a claim stronger than its evidence.
+2. **Re-identification.** Two consecutive runs produce the same fingerprint
+   (`mgate fingerprint`), so "same conclusion" is measurable rather than
+   asserted.
+3. **A 30-line entry point.** `repro/mem0_erasure_replay.py` verifies finding
+   1 without adopting this suite or trusting its author.
+
+That is the position this repository claims: not "we found it", but "we
+turned it into something a third party can check". If a future reader wants to
+credit a discovery, credit the threads above.
+
 ## Reproducibility (measured, not asserted)
 
 Two consecutive runs, same machine, same hour, fresh store each time:
