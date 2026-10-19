@@ -84,6 +84,17 @@ def run(adapter: MemoryAdapter, *,
     if not hits:
         L_sub.verdict = ABSTAIN
         L_sub.note += " | store returned nothing, nothing to judge"
+    elif getattr(adapter, "ranking_signal", "semantic") == "none":
+        # The adapter says its ordering carries no information (constant
+        # embeddings, no lexical index).  Position 0 vs position 1 then
+        # reflects insertion order, not retrieval quality -- judging it would
+        # manufacture a finding, which Rule 2 forbids.
+        L_sub.verdict = ABSTAIN
+        L_sub.note += (" | adapter exposes no ranking signal: order cannot "
+                       "be judged, only presence")
+        L_sub.add("truth_retrieved_presence_only",
+                  any("14 days" in h.get("text", "") for h in hits),
+                  "presence is checkable; rank is not")
     else:
         pos_truth = next((i for i, h in enumerate(hits)
                           if "14 days" in h.get("text", "")), -1)
@@ -136,10 +147,10 @@ def run(adapter: MemoryAdapter, *,
     ]
     rep.claims = [
         Claim("Retrieval ranks the correct fact above a higher-overlap but "
-              "untrusted distractor.", status="supported",
+              "untrusted distractor.", status=L_sub.claim_status(),
               layer="surface_substitution"),
         Claim("Published context-savings percentages are reproducible from a "
-              "ledger.", status="untestable", layer="claimed_savings",
+              "ledger.", status=L_sav.claim_status(), layer="claimed_savings",
               note="requires the run ledger's token counts"),
     ]
     rep.ledger_digest = adapter.ledger.digest()

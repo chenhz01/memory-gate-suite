@@ -128,9 +128,10 @@ def run(adapter: MemoryAdapter, *, user_id: str = "u1",
     ]
     rep.claims = [
         Claim("A new session recovers every established fact without "
-              "re-priming.", status="supported", layer="session_reset"),
+              "re-priming.", status=L_sess.claim_status(),
+              layer="session_reset"),
         Claim("The record set is unchanged across a session boundary.",
-              status="supported", layer="record_integrity"),
+              status=L_int.claim_status(), layer="record_integrity"),
     ]
     rep.ledger_digest = adapter.ledger.digest()
     rep.ledger_entries = len(adapter.ledger)

@@ -186,13 +186,11 @@ def run(adapter: MemoryAdapter, *, canary: str = DEFAULT_CANARY,
         Claim("Erased text does not re-enter an extraction prompt after a "
               "scope or record erasure (deterministic under the reference "
               "adapter).",
-              status="untestable" if invalid else "supported",
-              layer="prompt_resend"),
+              status=L_resend.claim_status(), layer="prompt_resend"),
         Claim("Erased text does not reappear in retrievable memory.",
-              status="untestable" if invalid else "supported",
-              layer="re_extraction"),
+              status=L_reext.claim_status(), layer="re_extraction"),
         Claim("Erased text is absent from raw storage rows.",
-              status="untestable", layer="storage_residue",
+              status=L_resid.claim_status(), layer="storage_residue",
               note="retention windows are a policy choice, not a defect"),
     ]
 

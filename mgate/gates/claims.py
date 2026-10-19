@@ -226,7 +226,7 @@ def run(claim_texts: Sequence[str], *,
         rep.claims = [
             Claim("Every audited sentence is attributable to a versioned "
                   "build and backed by a named evidence layer.",
-                  status="untestable", layer="claim_audit",
+                  status=L.claim_status(), layer="claim_audit",
                   note="see samples for per-sentence status"),
         ]
     rep.ledger_digest = ""

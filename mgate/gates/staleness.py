@@ -70,6 +70,10 @@ def run(adapter: MemoryAdapter, *, user_id: str = "u1",
                 L_sup.add("old_fact_marked_superseded",
                           old_hit.get("superseded") is True,
                           "record must carry superseded=True")
+            elif getattr(adapter, "ranking_signal", "semantic") == "none":
+                L_sup.verdict = ABSTAIN
+                L_sup.note += (" | no supersession flag and no ordering "
+                               "signal: retirement cannot be judged")
             else:
                 L_sup.add("old_fact_not_outranking", pos_new < pos_old,
                           f"new@{pos_new} old@{pos_old} (no flag exposed)")
@@ -112,11 +116,11 @@ def run(adapter: MemoryAdapter, *, user_id: str = "u1",
     ]
     rep.claims = [
         Claim("The current fact outranks the superseded fact for the same "
-              "query.", status="supported", layer="supersession"),
+              "query.", status=L_sup.claim_status(), layer="supersession"),
         Claim("Incompatible facts are never returned as equally valid.",
-              status="supported", layer="contradiction"),
-        Claim("Record age is exposed for audit.", status="untestable",
-              layer="age_visibility",
+              status=L_con.claim_status(), layer="contradiction"),
+        Claim("Record age is exposed for audit.",
+              status=L_age.claim_status(), layer="age_visibility",
               note="depends on adapter surface"),
     ]
     rep.ledger_digest = adapter.ledger.digest()

@@ -90,6 +90,21 @@ such a report at seal time.
 This is the rule that stops a 24-run sample from being published as a
 guarantee. It is the single most useful sentence in this document.
 
+**R3 is executed, not recommended.** Published guidance already says a
+capability claim should carry experimental evidence; guidance is a document,
+and a document cannot stop a README from saying "always". Here the seal step
+raises `ProtocolError` and emits no file, so the sentence has nowhere to live:
+
+```
+$ python examples/refuse_a_claim.py
+REFUSED at seal time -> claim 'Erased text always stays erased.' asserts
+determinism but layer 're_extraction' is model_dependent
+(Rule 3: a claim may not outrun its evidence)
+```
+
+An implementation that copies the gates but skips this step inherits the
+paperwork without the enforcement.
+
 ### R4 — No sample, no failure
 
 A layer may only be marked `fail` if it carries at least one reproducible

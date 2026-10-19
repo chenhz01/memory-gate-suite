@@ -9,7 +9,10 @@ version, the epistemic class of its evidence, a reproducible sample for each
 failure, and a hash-chained ledger digest.
 
 `mgate` is the reference implementation of [MGP-1.0](PROTOCOL.md). Zero
-dependencies, Python ≥ 3.9, ~2.2k lines.
+dependencies, Python ≥ 3.9, ~2.4k lines.
+
+First run against a store we did not write: **[VENDOR-TEST.md](VENDOR-TEST.md)**
+— mem0 2.2.1, four of six gates fail, with reproduction steps for each.
 
 ---
 
@@ -28,6 +31,35 @@ falsifiable properties** — "did this build pass this line, and who signs it".
 The difference is not marketing. A benchmark outputs a score; a score cannot
 express *"the fixture was poisoned, this run counts for nothing"*. MGP's
 `invalid` state can. That is the whole bet, stated plainly.
+
+---
+
+## The one rule a vendor cannot self-issue
+
+Published guidance on agent memory already says the right thing: *a capability
+claim should carry experimental evidence*. That guidance is a document. A
+document cannot stop a README from saying "erasure always works".
+
+MGP-1.0 turns that sentence into a build failure. Claims carry an evidence
+class; layers carry a confidence class; at seal time a claim that asserts
+absoluteness (`always`, `never`, `100%`, `guaranteed`) while resting on a
+`model_dependent` layer raises `ProtocolError` — and **no report file is
+produced**:
+
+```
+$ python examples/refuse_a_claim.py
+1) absolute claim on a model-dependent layer
+   REFUSED at seal time -> claim 'Erased text always stays erased.' asserts
+   determinism but layer 're_extraction' is model_dependent
+   (Rule 3: a claim may not outrun its evidence)
+   no report file exists; the sentence cannot be published as a sealed verdict
+```
+
+Anyone can copy the gates. Copying this means giving up the sentence you
+wanted to publish — which is exactly why it is worth something.
+
+Rule 3 is not "don't claim". It is: *claim at the resolution your evidence
+actually has*.
 
 ---
 
@@ -155,6 +187,10 @@ A repo reviewing memory vendors can cite `C1` instead of re-arguing what
   injections are out of scope for v1.0.
 - The reference store is a test rig, not a product. It exists so the gates
   have something to falsify.
+- Adapters may declare `ranking_signal = "none"` when their ordering carries
+  no information (e.g. constant embeddings with no lexical index). Every
+  rank-dependent layer then **abstains** instead of reporting a position as a
+  finding. The mem0 run is in exactly this state.
 
 ## Licensing
 

@@ -143,6 +143,20 @@ class Layer:
         if self.verdict not in VERDICTS:
             raise ProtocolError(f"unknown layer verdict: {self.verdict}")
 
+    def claim_status(self) -> str:
+        """The strongest claim this layer's verdict can support.
+
+        A report that says FAIL while claiming "supported" is not a style
+        problem; it is a self-contradicting document that a reader will
+        believe over the raw checks.  Binding this to one function makes the
+        contradiction impossible to write.
+        """
+        if self.verdict == FAIL:
+            return REFUTED
+        if self.verdict in (ABSTAIN, INVALID, "invalid"):
+            return UNTESTABLE
+        return SUPPORTED
+
     def add(self, name: str, ok: bool, detail: str = "") -> Check:
         c = Check(name=name, ok=ok, detail=detail)
         self.checks.append(c)
@@ -283,6 +297,15 @@ class Report:
             if c.layer and c.layer not in names:
                 raise ProtocolError(
                     f"claim {c.text!r} binds unknown layer {c.layer!r}")
+            # A report may not contradict its own evidence.
+            if c.layer:
+                lay = self.layer(c.layer)
+                expected = lay.claim_status()
+                if c.status != expected:
+                    raise ProtocolError(
+                        f"claim {c.text[:70]!r} is {c.status!r} but layer "
+                        f"{c.layer!r} is {lay.verdict!r} "
+                        f"(expected {expected!r})")
             if c.status == SUPPORTED and c.layer:
                 l = self.layer(c.layer)
                 low = c.text.lower()

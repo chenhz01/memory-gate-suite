@@ -1,0 +1,57 @@
+Creative Commons Attribution 4.0 International (CC BY 4.0)
+================================================================
+
+The Memory Gate Protocol specification — PROTOCOL.md, and the normative
+material in RELATED-WORK.md and COMMERCIAL.md that describes it — is licensed
+under the Creative Commons Attribution 4.0 International License.
+
+Full legal code (authoritative):
+  https://creativecommons.org/licenses/by/4.0/legalcode
+Human-readable summary:
+  https://creativecommons.org/licenses/by/4.0/
+
+Copyright 2026 chenhz01 (Zhengming, for Shanlun).
+
+You are free to
+---------------
+  Share  — copy and redistribute the material in any medium or format.
+  Adapt  — remix, transform, and build upon the material for any purpose,
+           even commercially.
+
+Under the following terms
+-------------------------
+  Attribution — You must give appropriate credit, provide a link to the
+                license, and indicate if changes were made. You may do so in
+                any reasonable manner, but not in any way that suggests the
+                licensor endorses you or your use.
+
+  No additional restrictions — You may not apply legal terms or technological
+                measures that legally restrict others from doing anything the
+                license permits.
+
+When attribution is required
+----------------------------
+Attribution is required only when you publicly claim conformance to the
+protocol — for example by stating that a product, report, or implementation
+"complies with", "conforms to", "passes", "is certified under", or is
+"compatible with" MGP-1.0 or Memory Gate Protocol 1.0.
+
+Merely implementing the protocol, forking this repository, or shipping code
+that follows the rules does **not**, by itself, require attribution.
+
+Recommended attribution string
+------------------------------
+  Conforms to Memory Gate Protocol (MGP) 1.0,
+  specification by chenhz01 (Zhengming) —
+  https://github.com/chenhz01/memory-gate-suite/blob/main/PROTOCOL.md
+
+For machine-readable reports, the equivalent fields are:
+
+  "protocol": "mgp/1.0",
+  "provider": "chenhz01",
+  "spec_url": "https://github.com/chenhz01/memory-gate-suite/blob/main/PROTOCOL.md"
+
+Scope note
+----------
+This licence covers the specification text only. The reference implementation
+(`mgate/`) is licensed separately under Apache-2.0 — see LICENSE and NOTICE.

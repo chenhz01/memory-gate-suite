@@ -135,6 +135,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                             "store")
     p_run.add_argument("--claim", action="append", default=[],
                        help="vendor sentence to audit (claims gate)")
+    p_run.add_argument("--adapter", default="reference",
+                       help="store under test: reference (default) or mem0")
     p_run.add_argument("--json", action="store_true", help="emit JSON")
     p_run.add_argument("--out", default="", help="write JSON to this path")
 
@@ -184,7 +186,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         defects = {}
         for d in [x.strip() for x in args.defects.split(",") if x.strip()]:
             defects[d] = True
-        out = run_suite(gates=gates, claim_texts=args.claim, defects=defects)
+        store = None
+        if args.adapter and args.adapter != "reference":
+            from .vendors import build as build_adapter
+            store = build_adapter(args.adapter)
+        out = run_suite(adapter=store, gates=gates, claim_texts=args.claim,
+                        defects=defects)
         if args.out:
             with open(args.out, "w", encoding="utf-8") as fh:
                 json.dump(out, fh, indent=2, ensure_ascii=False)

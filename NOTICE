@@ -2,13 +2,46 @@ memory-gate-suite
 MGP-1.0 reference implementation
 Copyright 2026 chenhz01 (正明 / Zhengming, for 善伦)
 
+Dual licence — the two halves cover different objects
+-----------------------------------------------------
+1) Code (the `mgate` package, tests, examples, tools):
+   Apache License 2.0 — full text in LICENSE.
+   You may use, modify, and redistribute it, including commercially and in
+   closed source, subject to the Apache-2.0 terms (NOTICE retention, patent
+   grant, warranty disclaimer).
+
+2) Specification (PROTOCOL.md and the normative parts of RELATED-WORK.md):
+   Creative Commons Attribution 4.0 International — full statement in
+   LICENSE-SPEC, legal code at
+   https://creativecommons.org/licenses/by/4.0/legalcode
+   Implementations are free to use any licence, including proprietary ones.
+
+When attribution is required
+----------------------------
+Attribution is required only when you publicly claim conformance — for
+example by stating that a product, report, or implementation "complies with",
+"conforms to", "passes", "is certified under", or is "compatible with"
+MGP-1.0 / Memory Gate Protocol 1.0.
+
+Merely implementing the protocol, forking this repository, or shipping code
+that follows the rules does NOT by itself require attribution.
+
+Recommended attribution string:
+
+  Conforms to Memory Gate Protocol (MGP) 1.0,
+  specification by chenhz01 (Zhengming) —
+  https://github.com/chenhz01/memory-gate-suite/blob/main/PROTOCOL.md
+
+Machine-readable equivalent: "protocol": "mgp/1.0", "provider": "chenhz01".
+
+Third-party components
+----------------------
 This product includes software developed at
 chenhz01 (https://github.com/chenhz01).
 
-The Memory Gate Protocol specification (PROTOCOL.md) is licensed separately
-under CC BY 4.0. Implementations of the protocol are free to use any licence;
-attribution of the specification is required only when conformance to MGP-1.0
-is claimed.
+The mem0 adapter (mgate/vendors/mem0_adapter.py) is an independent
+implementation that imports the mem0 OSS package at runtime; mem0 is not
+vendored, not modified, and remains under its own licence.
 
 Origin, design decisions and the public defect threads this work derives from
 are recorded in ORIGIN.md.
